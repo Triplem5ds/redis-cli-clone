@@ -28,9 +28,9 @@ func main() {
 
 	for {
 
-		resp := resp.NewResp(conn)
+		reader := resp.NewResp(conn)
 
-		value, err := resp.Read()
+		value, err := reader.Read()
 
 		if err != nil {
 			if err == io.EOF {
@@ -42,7 +42,9 @@ func main() {
 
 		fmt.Println(value)
 
-		conn.Write([]byte("+OK\r\n"))
+		writer := resp.NewWriter(conn)
+		writer.Write(resp.NewString("OK"))
+
 	}
 
 }
