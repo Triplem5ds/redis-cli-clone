@@ -5,6 +5,8 @@ import (
 	"io"
 	"net"
 	"os"
+
+	"main.go/resp"
 )
 
 func main() {
@@ -25,9 +27,10 @@ func main() {
 	}
 
 	for {
-		buff := make([]byte, 1<<10)
 
-		_, err := conn.Read(buff)
+		resp := resp.NewResp(conn)
+
+		value, err := resp.Read()
 
 		if err != nil {
 			if err == io.EOF {
@@ -36,6 +39,8 @@ func main() {
 			fmt.Println("Error reading from the client: ", err)
 			os.Exit(1)
 		}
+
+		fmt.Println(value)
 
 		conn.Write([]byte("+OK\r\n"))
 	}
